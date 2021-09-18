@@ -29,7 +29,9 @@ jobs:
       - run: dir
       - run: mkdir build
       - run: dir
-      - run: cd build
+      - run: cd ./build
+      - run: dir
+      - run: cd ${github.workspace}/build
       - run: dir
       - run: cmake .. -G "Visual Studio 15 2017 Win64" -DWITH_GPU=ON -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build .
