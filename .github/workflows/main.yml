@@ -24,11 +24,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - run: |
-          cd ${github.workspace}
-          mkdir build
-          cmake .. -G "Visual Studio 15 2017 Win64" -DWITH_GPU=ON -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
+      - run: cd ${github.workspace}
+      - run: mkdir build
+      - run: cd build
+      - run: cmake .. -G "Visual Studio 15 2017 Win64" -DWITH_GPU=ON -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build .
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
