@@ -35,7 +35,7 @@ jobs:
           ls
           cmake --version
           dir
-          cmake .. -G "Visual Studio 15 2019" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
+          cmake .. -G "Visual Studio 16 2019" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
           dir
           cmake --build .\build
 
