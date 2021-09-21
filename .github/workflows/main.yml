@@ -26,11 +26,12 @@ jobs:
       - uses: actions/checkout@v2
       - shell: pwsh
       - name: cmake build  
-      - run: mkdir build
-      - run: cd D:\a\Paddle\Paddle\build
-      - run: dir
-      - run: cmake -B .\build -G "Visual Studio 15 2017" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
-      - run: cmake --build .\build
+        run: |
+          mkdir build
+          cd D:\a\Paddle\Paddle\build
+          ls
+          cmake -B .\build -G "Visual Studio 15 2017" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
+          cmake --build .\build
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
