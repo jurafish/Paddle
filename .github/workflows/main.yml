@@ -31,7 +31,7 @@ jobs:
           mkdir build
           cd D:\a\Paddle\Paddle\build
           ls
-          cmake -B .\build -G "Visual Studio 15 2017" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
+          cmake .. -G "Visual Studio 15 2017" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
           cmake --build .\build
 
       # Runs a single command using the runners shell
