@@ -24,8 +24,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Setup Debug Session
-        uses: csexton/debugger-action@master        
+   
       - name: cmake build  
         shell: pwsh
         run: |
@@ -37,6 +36,7 @@ jobs:
           cmake --version
           dir
           cmake .. -G "Visual Studio 15 2017" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
+          dir
           cmake --build .\build
 
       # Runs a single command using the runners shell
