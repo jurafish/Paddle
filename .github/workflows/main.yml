@@ -34,6 +34,8 @@ jobs:
           cd build
           ls
           cmake --version
+          python --version
+          pip install numpy protobuf wheel
           dir
           cmake .. -G "Visual Studio 16 2019" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
           dir
