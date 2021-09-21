@@ -34,6 +34,7 @@ jobs:
           cd build
           ls
           cmake --version
+          dir
           cmake .. -G "Visual Studio 15 2017" -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release
           cmake --build .\build
 
