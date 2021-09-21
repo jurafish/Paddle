@@ -24,8 +24,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - shell: pwsh
+        
       - name: cmake build  
+        shell: pwsh
         run: |
           mkdir build
           cd D:\a\Paddle\Paddle\build
