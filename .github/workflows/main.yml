@@ -27,8 +27,7 @@ jobs:
         shell: pwsh
         run: |
           cd c:\
-          c:\
-          mkdir paddle
+          mkdir c:\paddle
           cd paddle
           
       - uses: actions/checkout@v2
