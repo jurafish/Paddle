@@ -49,9 +49,9 @@ jobs:
           python --version
           pip install numpy protobuf wheel
           dir
-          cmake .. -G "Visual Studio 15 2017" -A x64 -DON_INFER=ON -DWITH_MKL=ON  -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DPY_VERSION=3
+          cmake -B c:\paddle -G "Visual Studio 15 2017" -A x64 -DON_INFER=ON -DWITH_MKL=ON  -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DPY_VERSION=3
           dir
-          cmake --build . --target paddle_inference_shared
+          cmake --build c:\paddle --target paddle_inference_shared
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
