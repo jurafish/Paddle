@@ -48,7 +48,7 @@ jobs:
           dir
           cmake -B c:\paddle -G "Visual Studio 15 2017 Win64"  -DON_INFER=ON -DWITH_MKL=ON  -DWITH_GPU=OFF -DWITH_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -DPY_VERSION=3
           dir
-          cmake --build c:\paddle --target paddle_inference_shared
+          cmake --build c:\paddle --target inference_lib_dist
           ls
 
       - uses: actions/upload-artifact@v2
