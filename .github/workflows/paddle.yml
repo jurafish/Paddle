@@ -1,0 +1,34 @@
+# This is a basic workflow to help you get started with Actions
+
+name: paddle
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the develop branch
+  # push:
+  #  branches: [ develop ]
+  # pull_request:
+  #  branches: [ develop ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build_base:
+    name: Build base image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER_NAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Image Name
+        id: imagename
+        run: echo "::set-output name=name::giantsoft2dock/paddle-base"
+      - name: Build base image
+        run: docker build --pull --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from ${{ steps.imagename.outputs.name }} --tag ${{ steps.imagename.outputs.name }}:latest images
+      - name: Push base image
+        run: docker push ${{ steps.imagename.outputs.name }}:latest
