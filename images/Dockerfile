@@ -15,7 +15,7 @@ RUN \
 RUN pip3 install numpy protobuf wheel setuptools
 RUN ulimit -n 102400
 RUN \
-    cd /opt
+    cd /opt && \
     git clone https://github.com/PaddlePaddle/Paddle.git && \
     cd Paddle && \
     git checkout release/2.1
