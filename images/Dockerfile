@@ -37,7 +37,7 @@ ENV FFBUILD_TARGET_FLAGS="--pkg-config=pkg-config --cross-prefix=x86_64-w64-ming
     LDFLAGS="-static-libgcc -static-libstdc++ -L/opt/ffbuild/lib -O2 -pipe -fstack-protector-strong" \
     DLLTOOL="x86_64-w64-mingw32-dlltool"
 
-RUN pip3 install numpy protobuf wheel setuptools
+# RUN pip3 install numpy protobuf wheel setuptools
 RUN ulimit -n 102400
 RUN \
     cd /opt && \
