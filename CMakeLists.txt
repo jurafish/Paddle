@@ -90,7 +90,7 @@ if(WITH_ASCEND_CL AND NOT WITH_ASCEND_CXX11)
     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
 endif()
 
-if(WIN32)
+if((NOT CMAKE_CROSSCOMPILING) AND WIN32)
     option(MSVC_STATIC_CRT "use static C Runtime library by default" ON)
 
     set(CMAKE_SUPPRESS_REGENERATION ON)
@@ -242,7 +242,7 @@ if(SANITIZER_TYPE AND NOT "${SANITIZER_TYPE}" MATCHES "^(Address|Leak|Memory|Thr
   return()
 endif()
 
-if(WIN32)
+if((NOT CMAKE_CROSSCOMPILING) WIN32)
     if(WITH_DISTRIBUTE)
         MESSAGE(WARNING
             "Disable DISTRIBUTE when compiling for Windows. Force WITH_DISTRIBUTE=OFF.")
