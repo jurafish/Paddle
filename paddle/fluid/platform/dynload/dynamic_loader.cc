@@ -51,6 +51,14 @@ DEFINE_string(
 
 DEFINE_string(mklml_dir, "", "Specify path for loading libmklml_intel.so.");
 
+DEFINE_string(lapack_dir, "", "Specify path for loading liblapack.so.");
+
+DEFINE_string(mkl_dir, "",
+              "Specify path for loading libmkl_rt.so. "
+              "For insrance, /opt/intel/oneapi/mkl/latest/lib/intel64/."
+              "If default, "
+              "dlopen will search mkl from LD_LIBRARY_PATH");
+
 DEFINE_string(op_dir, "", "Specify path for loading user-defined op library.");
 
 #ifdef PADDLE_WITH_HIP
@@ -348,6 +356,16 @@ void* GetCurandDsoHandle() {
 #endif
 }
 
+#ifdef PADDLE_WITH_HIP
+void* GetROCFFTDsoHandle() {
+#if defined(__APPLE__) || defined(__OSX__)
+  return GetDsoHandleFromSearchPath(FLAGS_rocm_dir, "librocfft.dylib");
+#else
+  return GetDsoHandleFromSearchPath(FLAGS_rocm_dir, "librocfft.so");
+#endif
+}
+#endif
+
 void* GetNvjpegDsoHandle() {
 #if defined(__APPLE__) || defined(__OSX__)
   return GetDsoHandleFromSearchPath(FLAGS_cuda_dir, "libnvjpeg.dylib");
@@ -478,6 +496,16 @@ void* GetMKLMLDsoHandle() {
 #endif
 }
 
+void* GetLAPACKDsoHandle() {
+#if defined(__APPLE__) || defined(__OSX__)
+  return GetDsoHandleFromSearchPath(FLAGS_lapack_dir, "liblapack.3.dylib");
+#elif defined(_WIN32)
+  return GetDsoHandleFromSearchPath(FLAGS_lapack_dir, "liblapack.dll");
+#else
+  return GetDsoHandleFromSearchPath(FLAGS_lapack_dir, "liblapack.so.3");
+#endif
+}
+
 void* GetOpDsoHandle(const std::string& dso_name) {
   return GetDsoHandleFromSearchPath(FLAGS_op_dir, dso_name);
 }
@@ -503,6 +531,16 @@ void* GetCUFFTDsoHandle() {
                                     {cuda_lib_path});
 #else
   return GetDsoHandleFromSearchPath(FLAGS_cuda_dir, "libcufft.so");
+#endif
+}
+
+void* GetMKLRTDsoHandle() {
+#if defined(__APPLE__) || defined(__OSX__)
+  return GetDsoHandleFromSearchPath(FLAGS_mkl_dir, "libmkl_rt.dylib");
+#elif defined(_WIN32)
+  return GetDsoHandleFromSearchPath(FLAGS_mkl_dir, "mkl_rt.dll");
+#else
+  return GetDsoHandleFromSearchPath(FLAGS_mkl_dir, "libmkl_rt.so");
 #endif
 }
 

@@ -1305,6 +1305,7 @@ class SGDOptimizer(Optimizer):
             grad_clip=grad_clip,
             name=name)
         self.type = "sgd"
+        self._use_mkldnn = False
 
     @no_grad
     def _append_optimize_op(self, block, param_and_grad):
@@ -1323,6 +1324,7 @@ class SGDOptimizer(Optimizer):
                 "Grad": param_and_grad[1],
                 "LearningRate": lr
             },
+            attrs={"use_mkldnn": self._use_mkldnn},
             outputs={"ParamOut": param_and_grad[0]},
             stop_gradient=True)
 
@@ -2064,7 +2066,7 @@ class LarsMomentumOptimizer(Optimizer):
         attrs = {
             "mu": self._momentum,
             "lars_coeff": self._lars_coeff,
-            "lars_weight_decay": _lars_weight_decay,
+            "lars_weight_decay": [_lars_weight_decay],
             "multi_precision": find_master,
             "rescale_grad": self._rescale_grad
         }
@@ -2084,7 +2086,7 @@ class LarsMomentumOptimizer(Optimizer):
 
         # create the momentum optimize op
         momentum_op = block.append_op(
-            type=self.type,
+            type=self.type if _lars_weight_decay != 0.0 else 'momentum',
             inputs=inputs,
             outputs=outputs,
             attrs=attrs,
@@ -4381,6 +4383,18 @@ class PipelineOptimizer(object):
                         name=var,
                         type=core.VarDesc.VarType.READER,
                         persistable=source_var.persistable)
+                elif isinstance(source_var, Parameter):
+                    dest_var = block.create_parameter(
+                        name=source_var.name,
+                        shape=source_var.shape,
+                        dtype=source_var.dtype,
+                        type=source_var.type,
+                        lod_level=source_var.lod_level,
+                        stop_gradient=source_var.stop_gradient,
+                        trainable=source_var.trainable,
+                        optimize_attr=source_var.optimize_attr,
+                        regularizer=source_var.regularizer,
+                        error_clip=source_var.error_clip)
                 else:
                     dest_var = block._clone_variable(source_var, False)
                 self._clone_var_attr(dest_var, source_var)
@@ -5806,6 +5820,7 @@ class PipelineOptimizer(object):
         self.global_ring_id = pipeline_opt['global_ring_id']
         self.mp_degree = pipeline_opt['mp_degree']
         self.mp_rank = pipeline_opt['mp_rank']
+        self.scale_gradient = pipeline_opt.get('scale_gradient', False)
         assert self.mp_degree >= 1
         assert 0 <= self.mp_rank < self.mp_degree
 
@@ -5872,7 +5887,8 @@ class PipelineOptimizer(object):
             "startup_program": new_startup_program,
         }
         real_block = program_list[self.local_rank].global_block()
-        self._insert_loss_scale(real_block)
+        if not self.scale_gradient:
+            self._insert_loss_scale(real_block)
         if not self.use_sharding:
             # Step7: clear gradients before each mini-batch and 
             # accumulate gradients during backward
